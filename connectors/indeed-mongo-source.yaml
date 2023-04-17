@@ -1,0 +1,22 @@
+---
+apiVersion: platform.confluent.io/v1beta1
+kind: Connector
+metadata:
+  name: indeedmongosourcelatest
+  namespace: confluent
+spec:
+  class: "com.mongodb.kafka.connect.MongoSourceConnector"
+  taskMax: 2
+  connectClusterRef:
+    name: connect
+  configs:
+    connection.uri: ${file:/mnt/secrets/mongo-crdentials/mongocreds.txt:connection.uri}
+    database: "indeed-test"
+    collection: "userclicks"
+    topic.prefix: "indeedmongosrc"
+    key.converter: "org.apache.kafka.connect.storage.StringConverter"
+    value.converter: "io.confluent.connect.avro.AvroConverter"
+    value.converter.schema.registry.basic.auth.credentials.source: "USER_INFO"
+    value.converter.schema.registry.basic.auth.user.info: ${file:/mnt/secrets/ccloud-sr-credentials/basic.txt:username}:${file:/mnt/secrets/ccloud-sr-credentials/basic.txt:password}
+    value.converter.schema.registry.url: "https://psrc-4r3xk.us-east-2.aws.confluent.cloud"
+    value.converter.schemas.enable: "true"
