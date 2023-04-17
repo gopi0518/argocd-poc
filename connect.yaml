@@ -1,0 +1,55 @@
+---
+apiVersion: platform.confluent.io/v1beta1
+kind: Connect
+metadata:
+  name: connect
+spec:
+  replicas: 1
+  image:
+    application: confluentinc/cp-server-connect:7.3.0
+    init: confluentinc/confluent-init-container:2.5.0
+  configOverrides:
+    server:
+      - confluent.telemetry.enabled=true
+      - metric.reporters=io.confluent.telemetry.reporter.TelemetryReporter
+      - confluent.telemetry.api.key=${file:/mnt/secrets/telemetry-crdentials/telemetry.txt:apikey}
+      - confluent.telemetry.api.secret=${file:/mnt/secrets/telemetry-crdentials/telemetry.txt:apisecret}
+  podTemplate:
+    resources:
+      requests:
+        cpu: "1"
+        memory: "6Gi"
+    annotations:
+      ad.datadoghq.com/connect.check_names: '["confluent_platform"]'
+      ad.datadoghq.com/connect.init_configs: '[{"is_jmx": true, "collect_default_metrics": true, "service_check_prefix": "confluent", "new_gc_metrics": true, "collect_default_jvm_metrics": true}]'
+      ad.datadoghq.com/connect.instances: '[{"host": "%%host%%","port":"7203","max_returned_metrics":3000}]'
+      ad.datadoghq.com/connect.logs: '[{"source":"confluent_platform","service":"confluent_platform"}]'
+
+  build:
+    type: onDemand
+    onDemand:
+      plugins:
+        locationType: confluentHub
+        confluentHub:
+          - name: kafka-connect-mongodb
+            owner: mongodb
+            version: 1.10.0
+  dependencies:
+    kafka:
+      bootstrapEndpoint: lkc-j31j7m-p2z8lp.us-east-1.aws.glb.confluent.cloud:9092
+      authentication:
+        type: plain
+        jaasConfig:
+          secretRef: ccloud-credentials
+      tls:
+        enabled: true
+        ignoreTrustStoreConfig: true
+    schemaRegistry:
+      url: https://psrc-4r3xk.us-east-2.aws.confluent.cloud
+      authentication:
+        type: basic
+        basic:
+          secretRef: ccloud-sr-credentials
+  mountedSecrets:
+    - secretRef: mongo-crdentials
+    - secretRef: telemetry-crdentials
