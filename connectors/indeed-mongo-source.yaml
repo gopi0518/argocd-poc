@@ -6,7 +6,7 @@ metadata:
   namespace: confluent
 spec:
   class: "com.mongodb.kafka.connect.MongoSourceConnector"
-  taskMax: 2
+  taskMax: 1
   connectClusterRef:
     name: connect
   configs:
