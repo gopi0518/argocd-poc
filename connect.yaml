@@ -4,7 +4,7 @@ kind: Connect
 metadata:
   name: connect
 spec:
-  replicas: 1
+  replicas: 2
   image:
     application: confluentinc/cp-server-connect:7.3.0
     init: confluentinc/confluent-init-container:2.5.0
@@ -18,7 +18,7 @@ spec:
     resources:
       requests:
         cpu: "1"
-        memory: "6Gi"
+        memory: "5Gi"
     annotations:
       ad.datadoghq.com/connect.check_names: '["confluent_platform"]'
       ad.datadoghq.com/connect.init_configs: '[{"is_jmx": true, "collect_default_metrics": true, "service_check_prefix": "confluent", "new_gc_metrics": true, "collect_default_jvm_metrics": true}]'
