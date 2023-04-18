@@ -6,7 +6,7 @@ metadata:
   namespace: confluent
 spec:
   class: "com.mongodb.kafka.connect.MongoSinkConnector"
-  taskMax: 1
+  taskMax: 2
   connectClusterRef:
     name: connect
   configs:
