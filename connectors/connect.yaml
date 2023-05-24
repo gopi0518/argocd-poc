@@ -8,12 +8,6 @@ spec:
   image:
     application: confluentinc/cp-server-connect:7.3.0
     init: confluentinc/confluent-init-container:2.5.0
-  configOverrides:
-    server:
-      - confluent.telemetry.enabled=true
-      - metric.reporters=io.confluent.telemetry.reporter.TelemetryReporter
-      - confluent.telemetry.api.key=${file:/mnt/secrets/telemetry-crdentials/telemetry.txt:apikey}
-      - confluent.telemetry.api.secret=${file:/mnt/secrets/telemetry-crdentials/telemetry.txt:apisecret}
   podTemplate:
     resources:
       requests:
@@ -52,4 +46,3 @@ spec:
           secretRef: ccloud-sr-credentials
   mountedSecrets:
     - secretRef: mongo-crdentials
-    - secretRef: telemetry-crdentials
