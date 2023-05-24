@@ -30,7 +30,7 @@ spec:
             version: 1.10.0
   dependencies:
     kafka:
-      bootstrapEndpoint: lkc-j31j7m-p2z8lp.us-east-1.aws.glb.confluent.cloud:9092
+      bootstrapEndpoint: lkc-kn9kxm-6kykop.centralus.azure.glb.confluent.cloud:9092
       authentication:
         type: plain
         jaasConfig:
